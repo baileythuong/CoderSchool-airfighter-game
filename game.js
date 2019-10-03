@@ -8,23 +8,29 @@
 Here, we create and add our "canvas" to the page.
 We also load all of our images. 
 */
-
+function reset() {
+location.reload();
+}
 
 let canvas;
 let ctx;
 
 canvas = document.createElement("canvas");
 ctx = canvas.getContext("2d");
+ctx.font = "30px Arial";
+
 canvas.width = 512;
 canvas.height = 480;
 document.body.appendChild(canvas);
 
-let bgReady, heroReady, monsterReady;
-let bgImage, heroImage, monsterImage;
+let bgReady, aimReady, craftReady, craft1Ready;
+let bgImage, aimImage, craftImage, craft1Image;
 
 let startTime = Date.now();
 const SECONDS_PER_ROUND = 30;
 let elapsedTime = 0;
+var lst = ['images/Ship01.png','images/Ship02.png','images/Ship03.png']
+var item = lst[Math.floor(Math.random()*lst.length)]
 
 function loadImages() {
   bgImage = new Image();
@@ -32,37 +38,38 @@ function loadImages() {
     // show the background image
     bgReady = true;
   };
-  bgImage.src = "images/background.png";
-  heroImage = new Image();
-  heroImage.onload = function () {
+  bgImage.src = "images/backgroundsky.png";
+  aimImage = new Image();
+  aimImage.onload = function () {
     // show the hero image
-    heroReady = true;
+    aimReady = true;
   };
-  heroImage.src = "images/hero.png";
+  aimImage.src = "images/aim_V1.png";
 
-  monsterImage = new Image();
-  monsterImage.onload = function () {
-    // show the monster image
-    monsterReady = true;
+  craftImage = new Image();
+  craftImage.onload = function () {
+    // show the craft image
+    craftReady = true;
   };
-  monsterImage.src = "images/monster.png";
+
+  craftImage.src = item;
 }
 
 /** 
  * Setting up our characters.
  * 
- * Note that heroX represents the X position of our hero.
- * heroY represents the Y position.
+ * Note that aimX represents the X position of our hero.
+ * aimY represents the Y position.
  * We'll need these values to know where to "draw" the hero.
  * 
  * The same applies to the monster.
  */
 
-let heroX = canvas.width / 2;
-let heroY = canvas.height / 2;
+let aimX = canvas.width / 2;
+let aimY = canvas.height / 2;
 
-let monsterX = 100;
-let monsterY = 100;
+let craftX = 100;
+let craftY = 100;
 
 let score = 0
 
@@ -95,53 +102,59 @@ function setupKeyboardListeners() {
 let update = function () {
   // Update the time.
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-
+  if (elapsedTime > SECONDS_PER_ROUND) {
+    return
+  }
 
   if (38 in keysDown) { // Player is holding up key
-    heroY -= 5;
+    aimY -= 5;
   }
   if (40 in keysDown) { // Player is holding down key
-    heroY += 5;
+    aimY += 5;
   }
   if (37 in keysDown) { // Player is holding left key
-    heroX -= 5;
+    aimX -= 5;
   }
   if (39 in keysDown) { // Player is holding right key
-    heroX += 5;
+    aimX += 5;
   }
 
   // Hero going left off screen
-  if (heroX <= 0) {
-    heroX = canvas.width - 10
+  if (aimX <= 0) {
+    aimX = canvas.width - 10
   }
 
   // Hero going right off screen
-  if (heroX >= canvas.width) {
-    heroX = 0
+  if (aimX >= canvas.width) {
+    aimX = 0
   }
 
   // Hero going up off screen
-  if (heroY <= 0) {
-    heroY = canvas.height - 10
+  if (aimY <= 0) {
+    aimY = canvas.height - 10
   }
 
   // Hero going down off screen
-  if (heroY >= canvas.height) {
-    heroY = 0
+  if (aimY >= canvas.height) {
+    aimY = 0
   }
 
   // Check if player and monster collided. Our images
   // are about 32 pixels big.
   // console.log('keysDown', keysDown)
-  const heroHasCaughtMonster = heroX <= (monsterX + 32)
-  && monsterX <= (heroX + 32)
-  && heroY <= (monsterY + 32)
-  && monsterY <= (heroY + 32)
-  if (heroHasCaughtMonster) {
+  const aimedAtCraft = aimX <= (craftX + 32)
+  && craftX <= (aimX + 32)
+  && aimY <= (craftY + 32)
+  && craftY <= (aimY + 32)
+  if (aimedAtCraft) {
     score += 1
-    monsterX = Math.floor(Math.random() * canvas.width - 10)
-    monsterY = Math.floor(Math.random() * canvas.height - 10)
-    console.log('score', score)
+    craftX = Math.floor(Math.random() * canvas.width - 10);
+    craftY = Math.floor(Math.random() * canvas.height - 10);
+    craftImage.src = lst[Math.floor(Math.random()*lst.length)]
+    // console.log('score', score, )
+    document.getElementById("score").innerHTML=`${score}`
+
+
   }
 };
 
@@ -149,16 +162,29 @@ let update = function () {
  * This function, render, runs as often as possible.
  */
 var render = function () {
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "20px 'Turret Road'";
   if (bgReady) {
     ctx.drawImage(bgImage, 0, 0);
   }
-  if (heroReady) {
-    ctx.drawImage(heroImage, heroX, heroY);
+  if (aimReady) {
+    ctx.drawImage(aimImage, aimX, aimY);
   }
-  if (monsterReady) {
-    ctx.drawImage(monsterImage, monsterX, monsterY);
+  if (craftReady) {
+    ctx.drawImage(craftImage, craftX, craftY);
   }
-  ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
+
+  // set game over
+
+  if (SECONDS_PER_ROUND - elapsedTime > 0) {
+    ctx.fillText(
+      `Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`,
+      20,
+      100
+    );
+  } else {
+    ctx.fillText(`GAME OVER`, 200, 250);
+  }
 };
 
 /**
