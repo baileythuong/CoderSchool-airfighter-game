@@ -3,12 +3,20 @@
   <head>
     <meta charset="utf-8">
     <link href="https://fonts.googleapis.com/css?family=Turret+Road&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <title>Airfighter</title>
   </head>
   <body>
+    <div class="container">
     <h1>Airfighter</h1>
-    <h1 id="score">0</h1>
+    <h3 id="score">Scores: 0</h3>
     <button type="submit "id="reset" onclick="reset();">Reset</button>
+    </div>
+
+    <div class="container">
+        <canvas></canvas>
+    </div>
+
     <script src="game.js"></script>
   </body>
 </html>
