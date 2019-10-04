@@ -2,7 +2,7 @@
 
 Created by: Bailey
   
-This is a simple Canvas-based game that requires a solid understanding of the principles of JavaScript programming to customize. View online ![here](https://airfighter.netlify.com/)
+This is a simple Canvas-based game that requires a solid understanding of the principles of JavaScript programming to customize. View online [here](https://airfighter.netlify.com/)
 
 ## Code Reviews
 
