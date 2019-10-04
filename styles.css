@@ -1,7 +1,20 @@
+body {
+	font-family: 'Turret Road', cursive;
+}
+
 canvas {
 	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin-left: -300px; /* This is half the width */
-	margin-top: -200px; /* This is half the height */
+	padding: 4rem;
+}
+
+.navbar {
+background-color: #2b1b26;
+}
+
+.navbar {
+color: white;
+}
+
+.btn:hover {
+background-color: #00FF41;
 }

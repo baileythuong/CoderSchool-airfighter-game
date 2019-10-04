@@ -27,10 +27,17 @@ let bgReady, aimReady, craftReady, craft1Ready;
 let bgImage, aimImage, craftImage, craft1Image;
 
 let startTime = Date.now();
-const SECONDS_PER_ROUND = 20;
+const SECONDS_PER_ROUND = 30;
 let elapsedTime = 0;
-var lst = ["images/Ship01.png", "images/Ship02.png", "images/Ship03.png"];
-var item = lst[Math.floor(Math.random() * lst.length)];
+let lst = [
+  "images/Ship01.png",
+  "images/Ship02.png",
+  "images/Ship03.png",
+  "images/Ship04.png",
+  "images/Ship05.png",
+  "images/Ship06.png"
+];
+let item = lst[Math.floor(Math.random() * lst.length)];
 
 function loadImages() {
   bgImage = new Image();
@@ -44,7 +51,7 @@ function loadImages() {
     // show the hero image
     aimReady = true;
   };
-  aimImage.src = "images/aim_V1.png";
+  aimImage.src = "images/aim_V3.png";
 
   craftImage = new Image();
   craftImage.onload = function() {
@@ -53,6 +60,20 @@ function loadImages() {
   };
 
   craftImage.src = item;
+
+  fxImage = new Image();
+  fxImage.onload = function() {
+    fxReady = true;
+  };
+
+  fxImage.src = "images/FX.png";
+
+  gameOverImage = new Image();
+  gameOverImage.onload = function() {
+    gameOverImageReady = true;
+  };
+
+  gameOverImage.src = "images/message_gameover.png";
 }
 
 /**
@@ -72,6 +93,25 @@ let craftX = 100;
 let craftY = 100;
 
 let score = 0;
+let isGameOver = false;
+
+function getAppState() {
+  return (
+    JSON.parse(localStorage.getItem("appState")) || {
+      gameHistory: [],
+      currentHighScore: 0,
+      currentUser: document.getElementById("username") || "Anonymous"
+    }
+  );
+}
+
+function save(appState) {
+  return localStorage.setItem("appState", JSON.stringify(appState));
+}
+
+document.getElementById("highScore").innerHTML = `Highest Score: ${
+  getAppState().currentHighScore
+}`;
 
 /**
  * Keyboard Listeners
@@ -111,13 +151,11 @@ function updateMonterPos() {
  *
  *  If you change the value of 5, the player will move at a different rate.
  */
+
+//
 let update = function() {
-  // Update the time.
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-  if (elapsedTime > SECONDS_PER_ROUND) {
-    return;
-  }
-  
+  isGameOver = elapsedTime > SECONDS_PER_ROUND;
   // if (score === 5) {
   //   console.log("run");
   //   return;
@@ -170,40 +208,70 @@ let update = function() {
     craftY <= aimY + 32;
   if (aimedAtCraft) {
     score += 1;
-    craftX = Math.floor(Math.random() * canvas.width - 10);
-    craftY = Math.floor(Math.random() * canvas.height - 10);
-    craftImage.src = lst[Math.floor(Math.random() * lst.length)];
+    if (shootFX()) {
+      craftX = Math.floor(Math.random() * canvas.width - 10);
+      craftY = Math.floor(Math.random() * canvas.height - 10);
+      craftImage.src = lst[Math.floor(Math.random() * lst.length)];
+    }
+
     // console.log('score', score, )
     document.getElementById("score").innerHTML = `Scores: ${score}`;
+    const appState = getAppState();
+    console.log("getAppState", getAppState);
+
+    if (appState.currentHighScore < score) {
+      appState.currentHighScore = score;
+      save(appState);
+      document.getElementById("highScore").innerHTML = score;
+    }
   }
 };
+
+function shootFX() {
+  setTimeout(hitCraft, 500);
+
+  return true;
+}
+
+function hitCraft() {
+  craftImage = fxImage;
+}
 
 /**
  * This function, render, runs as often as possible.
  */
-var render = function() {
+let render = function() {
   ctx.fillStyle = "#ffffff";
   ctx.font = "20px 'Turret Road'";
-  if (bgReady) {
-    ctx.drawImage(bgImage, 0, 0);
-  }
-  if (aimReady) {
-    ctx.drawImage(aimImage, aimX, aimY);
-  }
-  if (craftReady) {
-    ctx.drawImage(craftImage, craftX, craftY);
-  }
 
-  // set game over
+  if (!isGameOver) {
+    //   if (score >= 20) {
+    //     ctx.fillText(`YOU WIN`, 200, 250);
+    //     isGameOver = true;
+    //   } else {
+    if (bgReady) {
+      ctx.drawImage(bgImage, 0, 0);
+    }
+    if (aimReady) {
+      ctx.drawImage(aimImage, aimX, aimY);
+    }
+    if (craftReady) {
+      ctx.drawImage(craftImage, craftX, craftY);
+    }
+    // ctx.fillText(
+    //   `Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`,
+    //   20,
+    //   100
+    // );
 
-  if (SECONDS_PER_ROUND - elapsedTime > 0) {
-    ctx.fillText(
-      `Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`,
-      20,
-      100
-    );
+    document.getElementById("seconds").innerHTML = `Timer: ${SECONDS_PER_ROUND -
+      elapsedTime}`;
+
+    // }
+    // set game over
   } else {
-    ctx.fillText(`GAME OVER`, 200, 250);
+    ctx.drawImage(gameOverImage, 300, 300);
+    isGameOver = true;
   }
 };
 
@@ -212,17 +280,20 @@ var render = function() {
  * update (updates the state of the game, in this case our hero and monster)
  * render (based on the state of our game, draw the right things)
  */
-var main = function() {
+let main = function() {
   update();
   render();
+
   // Request to do this again ASAP. This is a special method
   // for web browsers.
-  requestAnimationFrame(main);
+  if (!isGameOver) {
+    requestAnimationFrame(main);
+  }
 };
 
 // Cross-browser support for requestAnimationFrame.
 // Safely ignore this line. It's mostly here for people with old web browsers.
-var w = window;
+let w = window;
 requestAnimationFrame =
   w.requestAnimationFrame ||
   w.webkitRequestAnimationFrame ||
