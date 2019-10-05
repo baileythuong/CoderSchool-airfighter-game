@@ -41,10 +41,29 @@ let item = lst[Math.floor(Math.random() * lst.length)];
 function setupGame() {
   loadImages();
   setupKeyboardListeners();
-  document.getElementById("highScore").innerHTML = `Highest Score: ${
-    getAppState().currentHighScore
-  }`;
 }
+
+function closeForm(element) {
+  document.getElementById(element).style.display = "none";
+}
+
+function submitName() {
+  let userInputName = document.getElementById("nameInput").value;
+
+  let player = document.getElementById("playerName");
+  player.innerHTML = `G'day, ${userInputName}!`
+  closeForm("myForm");
+
+  playAudio();
+  var deadline = new Date(Date.parse(new Date()) + 1 * 1 * 1 * maxTime * 1000);
+  initializeClock("remain-time", deadline);
+  main();
+}
+
+let submitButton = document.getElementById("submitBtn");
+submitButton.addEventListener("click", submitName);
+
+document.getElementById("score").innerHTML = `Scores: ${getAppState().score}`;
 
 function loadImages() {
   bgImage = new Image();
@@ -83,9 +102,8 @@ function loadImages() {
 function getAppState() {
   return (
     JSON.parse(localStorage.getItem("appState")) || {
-      gameHistory: [],
       currentHighScore: 0,
-      currentUser: document.getElementById("username") || "Anonymous"
+      currentUser: document.getElementById("nameInput").value || "Obi Wan Kenobi"
     }
   );
 }
