@@ -18,7 +18,6 @@ let craftX = 100;
 let craftY = 100;
 let keysDown = {};
 let elapsedTime = 0;
-let isGameOver = false;
 let startTime = Date.now();
 let aimX = canvas.width / 2;
 let aimY = canvas.height / 2;
@@ -43,6 +42,9 @@ function submitName() {
 
   let player = document.getElementById("playerName");
   player.innerHTML = `G'day, ${userInputName || "Obi Wan Kenobi"}!`
+  document.getElementById("highScore").innerHTML = `Highest Score: ${
+    getAppState().currentHighScore}`;
+  document.getElementById("currentUser").innerHTML = `Captain: ${userInputName|| "Obi Wan Kenobi"}`
   closeForm("myForm");
 }
 
@@ -60,10 +62,24 @@ function setupGame() {
   setupKeyboardListeners();
 }
 
-document.getElementById("highScore").innerHTML = `Highest Score: ${
-  getAppState().currentHighScore
-}`;
-document.getElementById("currentUser").innerHTML = `Captain: ${getAppState().userInputName || "Obi Wan Kenobi"}`
+// Get Old Session Object of create a new if this is a new user
+
+function getOldSession() {
+  let GetCurrentSession = localStorage.getItem("PreviousSession")
+  if (GetCurrentSession == null) {
+    CurrentSession = {
+      isGameOver: false,
+      Top1: {
+        user: "Garfield", score: 1
+      },
+      highScopes: []
+    }
+    localStorage.setItem("PreviousSession", JSON.stringify(CurrentSession))
+  } else {
+    CurrentSession = JSON.parse(GetCurrentSession)
+    CurrentSession.isGameOver = false;
+  }
+}
 
 function loadImages() {
   bgImage = new Image();
@@ -104,7 +120,7 @@ function getAppState() {
     JSON.parse(localStorage.getItem("appState")) || {
       gameHistory: [],
       currentHighScore: 0,
-      currentUser: document.getElementById("playerName") || "Obi Wan Kenobi"
+      currentUser: document.getElementById("currentUser") || "Obi Wan Kenobi"
     }
   );
 }
@@ -188,19 +204,20 @@ function checkIfTargetedCraft() {
     if (newHighScore) {
       appState.currentHighScore = score;
       save(appState);
-      document.getElementById("highScore").innerHTML = score;
+      document.getElementById("highScore").innerHTML = `Highest Score: ${score}`;
     }
     document.getElementById("score").innerHTML = `Scores: ${score}`;
 
-    let currentUser = userInputName;
-    save(appState)
-    document.getElementById("currentUser").innerHTML = `${getAppState().currentUser}`
+    let userInputName = document.getElementById("nameInput").value;
+    let currentUser = appState.currentUser = userInputName;
+    save(appState);
+    document.getElementById("currentUser").innerHTML = `Captain: ${currentUser || "Obi Wan Kenobi"}`;
   }
 }
 
 let update = function() {
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-  isGameOver = elapsedTime > SECONDS_PER_ROUND;
+  if(ela)
   move();
   wrapAround();
   checkIfTargetedCraft();

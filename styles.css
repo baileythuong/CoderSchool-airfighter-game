@@ -3,7 +3,7 @@ body {
 }
 
 canvas {
-	padding: 4rem;
+padding: 50px;
 }
 
 .navbar {
@@ -21,7 +21,3 @@ background-color: #00FF41;
 .howtoplay {
 position: absolute;
 }
-
-body {
-	position: relative;
-  }
