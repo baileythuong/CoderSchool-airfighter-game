@@ -42,8 +42,11 @@ let lst = [
 let item = lst[Math.floor(Math.random() * lst.length)];
 
 function setupGame() {
+  startTime = Date.now(); // Setup this variable again on start
   loadImages();
   setupKeyboardListeners();
+  update();
+  main(); //Main should be in here
 }
 
 // close form after submission
@@ -228,8 +231,8 @@ function showExplosion() {
 }
 
 function moveSpaceCraft() {
-  craftX = Math.floor(Math.random() * canvas.width - 10);
-  craftY = Math.floor(Math.random() * canvas.height - 10);
+  craftX = Math.floor(Math.random() * (canvas.width - 60)); //Imager have 32 pixel height and width, so -60 will help them alway inside the screen
+  craftY = Math.floor(Math.random() * (canvas.height - 60));
 }
 
 function hitCraft() {
@@ -254,7 +257,7 @@ let render = function() {
       ctx.drawImage(fxImage, explosionXY.x, explosionXY.y);
     }
 
-      document.getElementById("seconds").innerHTML = `Timer: ${SECONDS_PER_ROUND -
+    document.getElementById("seconds").innerHTML = `Timer: ${SECONDS_PER_ROUND -
       elapsedTime}`;
   } else {
     ctx.drawImage(gameOverImage, 300, 300);
@@ -277,6 +280,3 @@ requestAnimationFrame =
   w.webkitRequestAnimationFrame ||
   w.msRequestAnimationFrame ||
   w.mozRequestAnimationFrame;
-
-setupGame();
-main();
