@@ -1,14 +1,8 @@
-# CoderSchool FTW - * Nam, the Monster Hunter *
+# CoderSchool FTW - *Airfighter*
 
-Created with love by: Charles Lee
+Created by: Bailey
   
-This is a simple Canvas-based game that requires a solid understanding of the principles of JavaScript programming to customize. 
-
-## Video Walkthrough
-
-Here's a walkthrough of implemented user stories.
-
-![](http://g.recordit.co/cURdPMSHT2.gif)
+This is a simple Canvas-based game that requires a solid understanding of the principles of JavaScript programming to customize. View online [here](https://airfighter.netlify.com/)
 
 ## Code Reviews
 
