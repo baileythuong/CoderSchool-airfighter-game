@@ -1,7 +1,9 @@
+// reset game
 function reset() {
   location.reload();
 }
 
+// initialization
 let canvas;
 let ctx;
 
@@ -28,6 +30,7 @@ let fxReady, fxImage, shouldShowFX;
 let bgReady, aimReady, craftReady, craft1Ready;
 let bgImage, aimImage, craftImage, craft1Image;
 
+// random aircrafts
 let lst = [
   "images/Ship01.png",
   "images/Ship02.png",
@@ -43,42 +46,45 @@ function setupGame() {
   setupKeyboardListeners();
 }
 
+// close form after submission
 function closeForm(element) {
   document.getElementById(element).style.display = "none";
 }
 
+// submit name
 function submitName() {
   let userInputName = document.getElementById("nameInput").value;
 
   let player = document.getElementById("playerName");
   player.innerHTML = `G'day, ${userInputName}!`
   closeForm("myForm");
-
-  playAudio();
-  var deadline = new Date(Date.parse(new Date()) + 1 * 1 * 1 * maxTime * 1000);
-  initializeClock("remain-time", deadline);
-  main();
 }
 
+// submit name button
 let submitButton = document.getElementById("submitBtn");
 submitButton.addEventListener("click", submitName);
 
+// rendering scores on navbar
 document.getElementById("score").innerHTML = `Scores: ${getAppState().score}`;
 
+// load images
 function loadImages() {
   bgImage = new Image();
   bgImage.onload = function() {
+    // background image
     bgReady = true;
   };
   bgImage.src = "images/backgroundsky.png";
   aimImage = new Image();
   aimImage.onload = function() {
+    // gun aim image
     aimReady = true;
   };
   aimImage.src = "images/aim_V3.png";
 
   craftImage = new Image();
   craftImage.onload = function() {
+    // load random aircrafts
     craftReady = true;
   };
   
@@ -86,6 +92,7 @@ function loadImages() {
   
   fxImage = new Image();
   fxImage.onload = function() {
+    // shooting effect
     fxReady = true;
   };
 
@@ -93,12 +100,14 @@ function loadImages() {
 
   gameOverImage = new Image();
   gameOverImage.onload = function() {
+    // game over image
     gameOverImageReady = true;
   };
 
   gameOverImage.src = "images/message_gameover.png";
 }
 
+// set local storage
 function getAppState() {
   return (
     JSON.parse(localStorage.getItem("appState")) || {
@@ -108,10 +117,12 @@ function getAppState() {
   );
 }
 
+// get local storage
 function save(appState) {
   return localStorage.setItem("appState", JSON.stringify(appState));
 }
 
+// set up arrow keys
 function setupKeyboardListeners() {
   addEventListener(
     "keydown",
@@ -130,7 +141,8 @@ function setupKeyboardListeners() {
   );
 }
 
-function updateMonterPos() {
+// update aircraft after shooting
+function updateCraft() {
   craftX = Math.floor(Math.random() * 400 - 10 + 1) + 10;
   craftY = Math.floor(Math.random() * 400 - 10 + 1) + 10;
 }
@@ -186,6 +198,7 @@ function checkIfTargetedCraft() {
     if (newHighScore) {
       appState.currentHighScore = score;
       save(appState);
+      // set highest scores on navbar
       document.getElementById("highScore").innerHTML = `Highest scores: ${score}`;
     }
     document.getElementById("score").innerHTML = `Scores: ${score}`;
@@ -224,8 +237,6 @@ function hitCraft() {
 }
 
 let render = function() {
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "20px 'Turret Road'";
 
   if (!isGameOver) {
     if (bgReady) {
@@ -243,7 +254,7 @@ let render = function() {
       ctx.drawImage(fxImage, explosionXY.x, explosionXY.y);
     }
 
-    document.getElementById("seconds").innerHTML = `Timer: ${SECONDS_PER_ROUND -
+      document.getElementById("seconds").innerHTML = `Timer: ${SECONDS_PER_ROUND -
       elapsedTime}`;
   } else {
     ctx.drawImage(gameOverImage, 300, 300);
