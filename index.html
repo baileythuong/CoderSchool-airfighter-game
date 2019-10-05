@@ -4,32 +4,63 @@
     <meta charset="utf-8" />
     <link
       href="https://fonts.googleapis.com/css?family=Turret+Road&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet"/>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
+      crossorigin="anonymous"/>
     <link rel="stylesheet" href="styles.css" />
     <title>Airfighter</title>
   </head>
 
   <body>
-      <nav class="navbar navbar-light fixed-bottom">
-            <img src="images/title.png" width="200">
-            <p class="my-2 my-sm-0" id="seconds">Timer: 0</p>
-            <p class="my-2 my-sm-0" id="score">Scores: 0</p>
-            <p class="my-2 my-sm-0" id="highScore">Highest Score: 0</p>
-            <button class="btn btn-success my-2 my-sm-0" type="submit " id="reset" onclick="reset();">Reset</button>
-        </nav>
+    <nav class="navbar navbar-light fixed-bottom">
+      <img src="images/title.png" width="200" />
+      <p class="my-2 my-sm-0" id="seconds">Timer: 0</p>
+      <p class="my-2 my-sm-0" id="score">Scores: 0</p>
+      <p class="my-2 my-sm-0" id="highScore">Highest Score: 0</p>
+      <p class="my-2 my-sm-0" id="currentUser">Captain:</p>
+      <button
+        class="btn btn-success my-2 my-sm-0"
+        type="submit "
+        id="reset"
+        onclick="reset();">
+        Reset
+      </button>
+    </nav>
 
     <div class="container">
-      <canvas></canvas>
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center">
+          <div id="canvas"></div>
+        </div>
+        <div class="col-6">
+          <h1 id="playerName">Welcome to Airfighter</h1>
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <strong><h3><u>Instruction:</u></h3></strong> You have 30 seconds to move your gun aim with the arrow keys in order to shoot the crafts and shoot down as many crafts as possible.
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+          <div class="col-6">
+          <div class="form-group position-fixed" id="myForm">
+              <div class="form-container">
+                <label for="playerName"
+                  ><b>Enter your name to start:</b></label>
+                <input id="nameInput" type="text" placeholder="Obi Wan Kenobi" autofocus />
+                <button id="submitBtn"class="btn border" onclick="main()">Start Game</button>
+              </div>
+            </div>
+            </div>
+        </div>
+    </div>
     </div>
 
     <script src="game.js"></script>
+    <script>
+      $('.alert').alert('close')
+    </script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

@@ -3,11 +3,14 @@ body {
 }
 
 canvas {
-	position: absolute;
 	padding: 4rem;
 }
 
 .navbar {
+background-color: #2b1b26;
+}
+
+.pos-f-t {
 background-color: #2b1b26;
 }
 
@@ -18,3 +21,11 @@ color: white;
 .btn:hover {
 background-color: #00FF41;
 }
+
+.howtoplay {
+position: absolute;
+}
+
+body {
+	position: relative;
+  }
