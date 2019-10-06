@@ -15,7 +15,7 @@ canvas.width = 512;
 canvas.height = 480;
 canvas.style = "position:absolute; top: 0%; left: 20%; margin-left: -250px;";
 document.body.appendChild(canvas);
-
+let currentName = '';
 let score = 0;
 let craftX = 100;
 let craftY = 100;
@@ -59,6 +59,7 @@ function submitName() {
   let userInputName = document.getElementById("nameInput").value;
 
   let player = document.getElementById("playerName");
+  currentName = userInputName;
   player.innerHTML = `G'day, ${userInputName}!`
   closeForm("myForm");
 }
@@ -200,6 +201,7 @@ function checkIfTargetedCraft() {
 
     if (newHighScore) {
       appState.currentHighScore = score;
+      appState.currentUser = currentName;
       save(appState);
       // set highest scores on navbar
       document.getElementById("highScore").innerHTML = `Highest scores: ${score}`;
