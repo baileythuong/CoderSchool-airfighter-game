@@ -59,8 +59,11 @@ function submitName() {
   let userInputName = document.getElementById("nameInput").value;
 
   let player = document.getElementById("playerName");
-  currentName = userInputName;
-  player.innerHTML = `G'day, ${userInputName}!`
+  if (userInputName === '') {
+    currentName = "Obi Wan Kenobi";
+  } else currentName = userInputName
+
+  player.innerHTML = `G'day, ${currentName}!`
   closeForm("myForm");
 }
 
@@ -74,28 +77,28 @@ document.getElementById("score").innerHTML = `Scores: ${getAppState().score}`;
 // load images
 function loadImages() {
   bgImage = new Image();
-  bgImage.onload = function() {
+  bgImage.onload = function () {
     // background image
     bgReady = true;
   };
   bgImage.src = "images/backgroundsky.png";
   aimImage = new Image();
-  aimImage.onload = function() {
+  aimImage.onload = function () {
     // gun aim image
     aimReady = true;
   };
   aimImage.src = "images/aim_V3.png";
 
   craftImage = new Image();
-  craftImage.onload = function() {
+  craftImage.onload = function () {
     // load random aircrafts
     craftReady = true;
   };
-  
+
   craftImage.src = item;
-  
+
   fxImage = new Image();
-  fxImage.onload = function() {
+  fxImage.onload = function () {
     // shooting effect
     fxReady = true;
   };
@@ -103,7 +106,7 @@ function loadImages() {
   fxImage.src = "images/FX.png";
 
   gameOverImage = new Image();
-  gameOverImage.onload = function() {
+  gameOverImage.onload = function () {
     // game over image
     gameOverImageReady = true;
   };
@@ -116,7 +119,7 @@ function getAppState() {
   return (
     JSON.parse(localStorage.getItem("appState")) || {
       currentHighScore: 0,
-      currentUser: document.getElementById("nameInput").value || "Obi Wan Kenobi"
+      currentUser: "Obi Wan Kenobi"
     }
   );
 }
@@ -130,7 +133,7 @@ function save(appState) {
 function setupKeyboardListeners() {
   addEventListener(
     "keydown",
-    function(key) {
+    function (key) {
       keysDown[key.keyCode] = true;
     },
     false
@@ -138,7 +141,7 @@ function setupKeyboardListeners() {
 
   addEventListener(
     "keyup",
-    function(key) {
+    function (key) {
       delete keysDown[key.keyCode];
     },
     false
@@ -193,7 +196,7 @@ function checkIfTargetedCraft() {
   if (spacecraftTargeted) {
     score += 1;
     shootFX();
-    
+
     craftImage.src = lst[Math.floor(Math.random() * lst.length)];
 
     const appState = getAppState();
@@ -210,7 +213,7 @@ function checkIfTargetedCraft() {
   }
 }
 
-let update = function() {
+let update = function () {
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
   isGameOver = elapsedTime > SECONDS_PER_ROUND;
   move();
@@ -241,7 +244,7 @@ function hitCraft() {
   craftImage = fxImage;
 }
 
-let render = function() {
+let render = function () {
 
   if (!isGameOver) {
     if (bgReady) {
@@ -267,7 +270,7 @@ let render = function() {
   }
 };
 
-let main = function() {
+let main = function () {
   update();
   render();
 
