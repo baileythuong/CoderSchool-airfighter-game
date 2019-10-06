@@ -222,11 +222,7 @@ function checkIfTargetedCraft() {
       appState.currentHighScore = score;
       appState.currentUser = currentName;
       save(appState);
-      // set highest scores on achivement tab
-      document.getElementById("highScore").innerHTML = `${getAppState().currentHighScore} <i class="fas fa-fighter-jet"></i>`
     }
-    document.getElementById("score").innerHTML = `Scores: ${score}`;
-    document.getElementById("userName").innerHTML = `Captain: ${getAppState().currentUser}`
   }
 }
 
@@ -285,6 +281,10 @@ let render = function () {
     ctx.drawImage(gameOverImage, 200, 200);
     isGameOver = true;
   }
+  document.getElementById("score").innerHTML = `Scores: ${score}`;
+  document.getElementById("userName").innerHTML = `Captain: ${getAppState().currentUser}`
+  // set highest scores on achivement tab
+  document.getElementById("highScore").innerHTML = `${getAppState().currentHighScore} <i class="fas fa-fighter-jet"></i>`
 };
 
 let main = function () {
