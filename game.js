@@ -231,7 +231,7 @@ function showExplosion() {
 }
 
 function moveSpaceCraft() {
-  craftX = Math.floor(Math.random() * (canvas.width - 60)); //Imager have 32 pixel height and width, so -60 will help them alway inside the screen
+  craftX = Math.floor(Math.random() * (canvas.width - 60)); //Images have 32 pixel height and width, so -60 will help them alway inside the screen
   craftY = Math.floor(Math.random() * (canvas.height - 60));
 }
 
