@@ -10,6 +10,7 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"/>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
     <link rel="stylesheet" href="styles.css" />
     <title>Airfighter</title>
   </head>
@@ -19,8 +20,12 @@
       <img src="images/title.png" width="200" />
       <p class="my-2 my-sm-0" id="seconds">Timer: 0</p>
       <p class="my-2 my-sm-0" id="score">Scores: 0</p>
-      <p class="my-2 my-sm-0" id="highScore">Highest Score: 0</p>
-      <!-- <p class="my-2 my-sm-0" id="currentUser">Captain:</p> -->
+      <!-- <p class="my-2 my-sm-0" id="highScore">Highest Score: 0</p> -->
+      <div class="pr-0">
+      <button id="muteSoundFx" class="btn btn-outline-success" onclick="muteSound();"><i class="fas fa-volume-mute"></i></button>
+      <button id="muteSoundFx" class="btn btn-outline-success" onclick="playSound();"><i class="fas fa-volume-up"></i></button>
+      </div>
+
       <button
         class="btn btn-success my-2 my-sm-0"
         type="submit "
@@ -32,19 +37,25 @@
 
     <div class="container d-flex justify-content-end">
         <div class="col-6">
-          <h1 id="playerName">Welcome to Airfighter</h1>
+          <h1 id="playerName" class="pt-4">Welcome to Airfighter</h1>
               <div class="alert alert-success alert-dismissible fade show" role="alert">
                   <strong><h3><u>Instruction:</u></h3></strong> Within 30 seconds, move your gun aim with the arrow keys on your computer in order to shoot down as many aircrafts as possible.
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
+
+                <ul class="list-group pb-3">
+                    <li class="list-group-item list-group-item-success"><h3><u>Achievement</u></h3></li>
+                    <li class="list-group-item"><h5 id="userName"></h5><p id="highScore"></p></li>
+                </ul>
+
           <div class="form-group fixed" id="myForm">
               <div class="form-container">
                 <label for="playerName"
                   ><b>Enter your name to start:</b></label>
                 <input id="nameInput" type="text" placeholder="Obi Wan Kenobi" autofocus />
-                <button id="submitBtn" class="btn border" onclick="setupGame();">Start Game</button>
+                <button id="submitBtn" class="btn btn-outline-success" onclick="setupGame();">Start Game</button>
               </div>
             </div>
         </div>
@@ -52,9 +63,10 @@
     </div>
 
     <script src="game.js"></script>
-    <!-- <script>
-      $('.alert').alert('close')
-    </script> -->
+    <script>
+    $(btn-outline-success).button('toggle')
+    $(".alert").alert('close')
+    </script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

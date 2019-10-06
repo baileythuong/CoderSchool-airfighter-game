@@ -15,7 +15,7 @@ canvas.width = 512;
 canvas.height = 480;
 canvas.style = "position:absolute; top: 0%; left: 20%; margin-left: -250px;";
 document.body.appendChild(canvas);
-let currentName = '';
+let currentName = "";
 let score = 0;
 let craftX = 100;
 let craftY = 100;
@@ -27,8 +27,22 @@ let aimX = canvas.width / 2;
 let aimY = canvas.height / 2;
 const SECONDS_PER_ROUND = 30;
 let fxReady, fxImage, shouldShowFX;
-let bgReady, aimReady, craftReady, craft1Ready;
-let bgImage, aimImage, craftImage, craft1Image;
+let bgReady, aimReady, craftReady;
+let bgImage, aimImage, craftImage;
+let fxSound = new Audio("sounds/explosion.wav")
+let bgMusic = new Audio("sounds/Self-Destruct-Sequence.mp3")
+
+// mute sound
+function muteSound() {
+fxSound.muted = true;
+bgMusic.muted = true;
+}
+
+// play sound
+function playSound() {
+fxSound.muted = false;
+bgMusic.muted = false;
+}
 
 // random aircrafts
 let lst = [
@@ -59,8 +73,11 @@ function submitName() {
   let userInputName = document.getElementById("nameInput").value;
 
   let player = document.getElementById("playerName");
-  currentName = userInputName;
-  player.innerHTML = `G'day, ${userInputName || "Obi Wan Kenobi"}!`
+  if (userInputName === "") {
+    currentName = "Obi Wan Kenobi";
+  } else currentName = userInputName
+
+  player.innerHTML = `G'day, ${currentName}!`
   closeForm("myForm");
 }
 
@@ -68,34 +85,34 @@ function submitName() {
 let submitButton = document.getElementById("submitBtn");
 submitButton.addEventListener("click", submitName);
 
-// rendering scores on navbar
+// render scores on navbar
 document.getElementById("score").innerHTML = `Scores: ${getAppState().score}`;
 
 // load images
 function loadImages() {
   bgImage = new Image();
-  bgImage.onload = function() {
+  bgImage.onload = function () {
     // background image
     bgReady = true;
   };
   bgImage.src = "images/backgroundsky.png";
   aimImage = new Image();
-  aimImage.onload = function() {
+  aimImage.onload = function () {
     // gun aim image
     aimReady = true;
   };
   aimImage.src = "images/aim_V3.png";
 
   craftImage = new Image();
-  craftImage.onload = function() {
+  craftImage.onload = function () {
     // load random aircrafts
     craftReady = true;
   };
-  
+
   craftImage.src = item;
-  
+
   fxImage = new Image();
-  fxImage.onload = function() {
+  fxImage.onload = function () {
     // shooting effect
     fxReady = true;
   };
@@ -103,7 +120,7 @@ function loadImages() {
   fxImage.src = "images/FX.png";
 
   gameOverImage = new Image();
-  gameOverImage.onload = function() {
+  gameOverImage.onload = function () {
     // game over image
     gameOverImageReady = true;
   };
@@ -116,7 +133,7 @@ function getAppState() {
   return (
     JSON.parse(localStorage.getItem("appState")) || {
       currentHighScore: 0,
-      currentUser: document.getElementById("nameInput").value || "Obi Wan Kenobi"
+      currentUser: "Obi Wan Kenobi"
     }
   );
 }
@@ -130,7 +147,7 @@ function save(appState) {
 function setupKeyboardListeners() {
   addEventListener(
     "keydown",
-    function(key) {
+    function (key) {
       keysDown[key.keyCode] = true;
     },
     false
@@ -138,7 +155,7 @@ function setupKeyboardListeners() {
 
   addEventListener(
     "keyup",
-    function(key) {
+    function (key) {
       delete keysDown[key.keyCode];
     },
     false
@@ -193,7 +210,9 @@ function checkIfTargetedCraft() {
   if (spacecraftTargeted) {
     score += 1;
     shootFX();
-    
+    fxSound.play();
+    fxSound.volume= 0.1;
+
     craftImage.src = lst[Math.floor(Math.random() * lst.length)];
 
     const appState = getAppState();
@@ -203,14 +222,15 @@ function checkIfTargetedCraft() {
       appState.currentHighScore = score;
       appState.currentUser = currentName;
       save(appState);
-      // set highest scores on navbar
-      document.getElementById("highScore").innerHTML = `Highest scores: ${score}`;
+      // set highest scores on achivement tab
+      document.getElementById("highScore").innerHTML = `${getAppState().currentHighScore} <i class="fas fa-fighter-jet"></i>`
     }
     document.getElementById("score").innerHTML = `Scores: ${score}`;
+    document.getElementById("userName").innerHTML = `Captain: ${getAppState().currentUser}`
   }
 }
 
-let update = function() {
+let update = function () {
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
   isGameOver = elapsedTime > SECONDS_PER_ROUND;
   move();
@@ -241,7 +261,7 @@ function hitCraft() {
   craftImage = fxImage;
 }
 
-let render = function() {
+let render = function () {
 
   if (!isGameOver) {
     if (bgReady) {
@@ -262,12 +282,13 @@ let render = function() {
     document.getElementById("seconds").innerHTML = `Timer: ${SECONDS_PER_ROUND -
       elapsedTime}`;
   } else {
-    ctx.drawImage(gameOverImage, 300, 300);
+    ctx.drawImage(gameOverImage, 200, 200);
     isGameOver = true;
   }
 };
 
-let main = function() {
+let main = function () {
+  bgMusic.play();
   update();
   render();
 
