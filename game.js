@@ -42,11 +42,11 @@ let lst = [
 let item = lst[Math.floor(Math.random() * lst.length)];
 
 function setupGame() {
-  startTime = Date.now(); // Setup this variable again on start
+  startTime = Date.now(); // setup this variable again on start
   loadImages();
   setupKeyboardListeners();
   update();
-  main(); //Main should be in here
+  main(); //main should be in here
 }
 
 // close form after submission
@@ -60,7 +60,7 @@ function submitName() {
 
   let player = document.getElementById("playerName");
   currentName = userInputName;
-  player.innerHTML = `G'day, ${userInputName}!`
+  player.innerHTML = `G'day, ${userInputName || "Obi Wan Kenobi"}!`
   closeForm("myForm");
 }
 
