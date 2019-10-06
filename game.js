@@ -282,8 +282,9 @@ let render = function () {
     isGameOver = true;
   }
   document.getElementById("score").innerHTML = `Scores: ${score}`;
-  document.getElementById("userName").innerHTML = `Captain: ${getAppState().currentUser} - ${getAppState().currentHighScore} <i class="fas fa-fighter-jet"></i>`
-  // set highest scores on achivement tab
+
+    // set highest scores on history tab
+  document.getElementById("userName").innerHTML = `Captain ${getAppState().currentUser} : ${getAppState().currentHighScore} <i class="fas fa-fighter-jet"></i>`
 };
 
 let main = function () {
